@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>HTML2Canvas Test</title>
+    <script type="text/javascript" src="html2canvas.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        var $button = $("#start");
+        $button.bind("click", function() {
+          html2canvas($("body"), {
+            onrendered: function(canvas) {
+              var data = canvas.toDataURL();
+              var screenshot = $("#screenshot");
+              screenshot.attr('src', data);
+              console.log(data);
+              console.log(window.atob(data));
+              $("#screenshot").html(canvas);
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Sup lol</h1>
+    <h2>Second header</h2>
+    <h3>Third header</h3>
+    <button id="start" value="Start rendering">Sup</button>
+
+    <img id="screenshot"></div>
+  </body>
+</html>

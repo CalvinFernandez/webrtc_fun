@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>PeerJS1 Test</title>
+    <script type="text/javascript" src="peer.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+      var peer = new Peer('peer1', {host: 'localhost', port: 9000});
+      peer.on('open', function(id) {
+        console.log(id);
+      });
+      peer.on('connection', function(conn) {
+        conn.on('data', function(data) {
+          console.log("got data");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Peer 1</h1>
+  </body>
+</html>

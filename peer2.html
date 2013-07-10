@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>PeerJS2 Test</title>
+    <script type="text/javascript" src="html2canvas.js"></script>
+    <script type="text/javascript" src="peer.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script>
+      // HTML2Canvas
+      $(document).ready(function() {
+        html2canvas($("body"), {
+          onrendered: function(canvas) {
+            var rendered = canvas.toDataURL(); 
+            var screenshot = $("#screenshot");
+            screenshot.attr('src', rendered);
+            console.log(rendered);
+            var peer = new Peer('peer2', {host: 'localhost', port: 9000});
+            var conn = peer.connect('peer1');
+            conn.on('open', function() {
+              console.log("the connection to peer1 has been opened");
+              conn.send(rendered);
+            });
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>This is a really fancy site!</h1>
+    <h2>So freaking fancy</h2>
+    <h3>LOL HAHAHA</h3>
+    <a href="www.google.com">Google</a><br />
+    <a href="www.google.com">Google</a><br />
+    <a href="www.google.com">Google</a><br />
+    <a href="www.google.com">Google</a><br />
+    <a href="www.google.com">Google</a><br />
+    <a href="www.google.com">Google</a><br />
+    <form>
+      <input type="text" placeholder="type your name here" />
+      <input type="text" placeholder="type your name here" />
+      <input type="submit" value="Submit" />
+    </form>
+
+    <img id="screenshot"></div>
+  </body>
+</html>
