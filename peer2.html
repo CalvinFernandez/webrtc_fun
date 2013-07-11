@@ -11,13 +11,24 @@
           onrendered: function(canvas) {
             var rendered = canvas.toDataURL(); 
             var screenshot = $("#screenshot");
+            var chunkSize = 500;
+            var numChunks = rendered.length / chunkSize + 1;
+            var test = chrome.tabs.captureVisibleTab();
+            console.log(test);
             screenshot.attr('src', rendered);
             console.log(rendered);
             var peer = new Peer('peer2', {host: 'localhost', port: 9000});
             var conn = peer.connect('peer1');
             conn.on('open', function() {
-              console.log("the connection to peer1 has been opened");
-              conn.send(rendered);
+              /*
+              setInterval(function() {
+                for (var i = 0; i < numChunks; i++) {
+                  conn.send(rendered.slice(i * chunkSize, (i * chunkSize) + chunkSize));
+                }
+                conn.send("done");
+              }, 1000);
+              */
+
             });
           }
         });

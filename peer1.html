@@ -5,17 +5,31 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script>
       var peer = new Peer('peer1', {host: 'localhost', port: 9000});
+      var combined = "";
       peer.on('open', function(id) {
         console.log(id);
       });
       peer.on('connection', function(conn) {
         conn.on('data', function(data) {
-          console.log("got data");
+          if (data.scrollX >= 0 || data.scrollY >= 0) {
+            $("#screen").contents().find("html, body").animate({scrollTop: data.scrollY},{ duration: 100, easing: 'swing'});
+            //$("#screen").scrollTo(data.scrollX, data.scrollY);
+          } else {
+            $("#screen").attr('width', data.size.width);
+            $("#screen").attr('height', data.size.height);
+            $("#screen").attr('src', data.blob);
+
+            console.log(data);
+          }
         });
       });
     </script>
   </head>
   <body>
     <h1>Peer 1</h1>
+
+
+    <iframe id="screen" style="overflow: hidden">
+    </iframe>
   </body>
 </html>

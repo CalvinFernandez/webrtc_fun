@@ -1626,7 +1626,6 @@ DataConnection.prototype.send = function(data) {
     this._dc.send(JSON.stringify(data));
   } else {
     var utf8 = (this.serialization === 'binary-utf8');
-    console.log(data);
     var blob = util.pack(data, utf8);
     // DataChannel currently only supports strings.
     if (util.browserisms === 'Webkit') {
