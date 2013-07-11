@@ -13,6 +13,17 @@
         toAbsoluteURL(document.querySelectorAll("link[rel='stylesheet']"));
         toAbsoluteURL(document.scripts);
 
+        for (var i = 0; i < document.scripts.length; i++) {
+          if (!document.scripts[i].src) {
+            console.log("embedded js");
+            console.log(document.scripts[i].innerHTML);
+            document.scripts[i].innerHTML = "";
+          }
+        }
+
+
+        console.log(document.scripts);
+
         var screenshot = document.documentElement.cloneNode(true);
 
         dom.size = {
@@ -29,7 +40,7 @@
 
         var blob = new Blob([screenshot.outerHTML], {type: 'text/html'});
         var peer = new Peer('peer2', {host: 'localhost', port: 9000});
-        var conn = peer.connect('peer1');
+        var conn = peer.connect('peer1', {reliable: true});
         dom.blob = window.URL.createObjectURL(blob);
         conn.on('open', function() {
           console.log("open");
@@ -37,63 +48,29 @@
 
         });
 
-        console.log(screenshot.outerHTML);
-
         window.onscroll = function() {
-          console.log("We scrolled");
-          var conn = peer.connect('peer1');
-          conn.on('open', function() {
-            conn.send({
-              scrollX: document.body.scrollLeft,
-              scrollY: document.body.scrollTop
-            });            
-          });
+          conn.send({
+            scrollX: document.body.scrollLeft,
+            scrollY: document.body.scrollTop
+          });            
         }
+
 
       });
 
       function toAbsoluteURL(obj) {
-        console.log(obj);
         for (var i = 0; i < obj.length; i++) {
-          console.log(obj[i].src);
           if (obj[i].src) {
             obj[i].src = obj[i].src;
           } else if (obj[i].href) {
             obj[i].href = obj[i].href;
-          }
-          console.log(obj[i]);
+          } 
+
           //obj[i].src = "http://www.google.com";
           //console.log(obj[i])
         }
       }
 
-      function rel_to_abs(url){
-          /* Only accept commonly trusted protocols:
-           * Only data-image URLs are accepted, Exotic flavours (escaped slash,
-           * html-entitied characters) are not supported to keep the function fast */
-        if(/^(https?|file|ftps?|mailto|javascript|data:image\/[^;]{2,9};):/i.test(url))
-               return url; //Url is already absolute
-
-          var base_url = location.href.match(/^(.+)\/?(?:#.+)?$/)[0]+"/";
-          if(url.substring(0,2) == "//")
-              return location.protocol + url;
-          else if(url.charAt(0) == "/")
-              return location.protocol + "//" + location.host + url;
-          else if(url.substring(0,2) == "./")
-              url = "." + url;
-          else if(/^\s*$/.test(url))
-              return ""; //Empty = Return nothing
-          else url = "../" + url;
-
-          url = base_url + url;
-          var i=0
-          while(/\/\.\.\//.test(url = url.replace(/[^\/]+\/+\.\.\//g,"")));
-
-          /* Escape certain characters to prevent XSS */
-          url = url.replace(/\.$/,"").replace(/\/\./g,"").replace(/"/g,"%22")
-                  .replace(/'/g,"%27").replace(/</g,"%3C").replace(/>/g,"%3E");
-          return url;
-      }
     </script>
     <link type="text/css" rel="stylesheet" href="style.css">
     <style>
